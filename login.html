@@ -6,36 +6,129 @@
   <title>Login - Plano de Estudos de Emanuel</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-    <h1 class="text-3xl font-bold text-indigo-700 mb-6 text-center">Plano de Estudos</h1>
-    <p class="text-gray-600 text-center mb-8">Faça login para acessar seu plano personalizado</p>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
     
-    <form id="loginForm">
-      <div class="mb-6">
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9fafb;
+      background-image: url('https://images.unsplash.com/photo-1537434016005-5a9bce951af4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .login-container {
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 450px;
+      transition: transform 0.3s ease;
+    }
+    
+    .login-container:hover {
+      transform: translateY(-5px);
+    }
+    
+    .form-input {
+      transition: border-color 0.3s;
+    }
+    
+    .form-input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+    
+    .login-button {
+      transition: all 0.3s ease;
+    }
+    
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+    
+    /* Loading spinner */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      backdrop-filter: blur(5px);
+      display: none;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(79, 70, 229, 0.3);
+      border-radius: 50%;
+      border-top-color: #4f46e5;
+      animation: spinner 1s linear infinite;
+    }
+    
+    @keyframes spinner {
+      to {transform: rotate(360deg);}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-indigo-700 mb-2">Plano de Estudos</h1>
+      <p class="text-gray-600">Faça login para acessar seu plano personalizado</p>
+    </div>
+    
+    <form id="loginForm" class="space-y-6">
+      <div>
         <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
         <div class="relative">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <i class="fas fa-envelope text-gray-400"></i>
           </div>
-          <input type="email" id="email" class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+          <input type="email" id="email" class="form-input w-full pl-10 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
         </div>
       </div>
       
-      <div class="mb-8">
-        <label for="password" class="block text-gray-700 font-medium mb-2">Senha</label>
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label for="password" class="block text-gray-700 font-medium">Senha</label>
+          <a href="#" class="text-sm text-indigo-600 hover:underline">Esqueceu a senha?</a>
+        </div>
         <div class="relative">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <i class="fas fa-lock text-gray-400"></i>
           </div>
-          <input type="password" id="password" class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+          <input type="password" id="password" class="form-input w-full pl-10 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" id="toggle-password">
+            <i class="fas fa-eye text-gray-400" id="password-icon"></i>
+          </div>
         </div>
       </div>
       
-      <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center">
-        <i class="fas fa-sign-in-alt mr-2"></i> Entrar
-      </button>
+      <div>
+        <button type="submit" class="login-button w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 flex items-center justify-center">
+          <i class="fas fa-sign-in-alt mr-2"></i> Entrar
+        </button>
+      </div>
       
       <p id="errorMessage" class="text-red-500 mt-4 text-center"></p>
     </form>
@@ -46,7 +139,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js"></script>
   
   <script>
-    // Configuração do Firebase (mesma do index.html)
+    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBlDAZAN0koJrEiB_6JU8ZvrAu_Lq0vHN0",
       authDomain: "plano-estudos-ti.firebaseapp.com",
@@ -63,10 +156,34 @@
     // Referência para Auth
     const auth = firebase.auth();
     
+    // Loading overlay
+    const loadingOverlay = document.getElementById('loading-overlay');
+    
     // Verificar se o usuário já está logado
     auth.onAuthStateChanged(user => {
       if (user) {
+        // Mostrar loading enquanto redireciona
+        loadingOverlay.style.display = 'flex';
         window.location.href = 'index.html';
+      }
+    });
+    
+    // Alternância de visibilidade da senha
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordIcon = document.getElementById('password-icon');
+    const passwordInput = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      // Alternar ícone
+      if (type === 'text') {
+        passwordIcon.classList.remove('fa-eye');
+        passwordIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordIcon.classList.remove('fa-eye-slash');
+        passwordIcon.classList.add('fa-eye');
       }
     });
     
@@ -78,6 +195,9 @@
       const password = document.getElementById('password').value;
       const errorMessage = document.getElementById('errorMessage');
       
+      // Mostrar loading
+      loadingOverlay.style.display = 'flex';
+      
       // Mostrar mensagem de carregamento
       errorMessage.textContent = "Autenticando...";
       errorMessage.className = "text-indigo-500 mt-4 text-center";
@@ -87,7 +207,23 @@
           window.location.href = 'index.html';
         })
         .catch(error => {
-          errorMessage.textContent = 'Email ou senha incorretos. Tente novamente.';
+          // Esconder loading
+          loadingOverlay.style.display = 'none';
+          
+          let message = 'Email ou senha incorretos. Tente novamente.';
+          
+          // Mensagens de erro personalizadas
+          if (error.code === 'auth/user-not-found') {
+            message = 'Usuário não encontrado. Verifique seu email.';
+          } else if (error.code === 'auth/wrong-password') {
+            message = 'Senha incorreta. Tente novamente.';
+          } else if (error.code === 'auth/too-many-requests') {
+            message = 'Muitas tentativas incorretas. Tente novamente mais tarde.';
+          } else if (error.code === 'auth/network-request-failed') {
+            message = 'Problema de conexão. Verifique sua internet.';
+          }
+          
+          errorMessage.textContent = message;
           errorMessage.className = "text-red-500 mt-4 text-center";
           console.error(error);
         });
