@@ -1,693 +1,1863 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano de Estudos de Emanuel Ferreira - Transição para TI & Crescimento Pessoal</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary-color: #3f37c9;
-            --secondary-color: #4361ee;
-            --accent-color: #4cc9f0;
-            --success-color: #4895ef;
-            --warning-color: #f72585;
-            --info-color: #4cc9f0;
-            --light-color: #f8f9fa;
-            --dark-color: #242424;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fb;
-            color: #242424;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-        }
-        
-        .container-custom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: none;
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            font-weight: 600;
-            padding: 1rem;
-            border-bottom: none;
-        }
-        
-        .progress {
-            height: 10px;
-            border-radius: 5px;
-        }
-        
-        .progress-bar {
-            background-color: var(--accent-color);
-        }
-        
-        .calendar-container {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            margin-top: 10px;
-        }
-        
-        .calendar-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            margin-bottom: 5px;
-            text-align: center;
-        }
-        
-        .calendar-day {
-            aspect-ratio: 1/1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-        
-        .calendar-day:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        .calendar-day.today {
-            border: 2px solid var(--warning-color);
-        }
-        
-        .calendar-day.study-day {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        .task-item {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .task-item:hover {
-            background-color: #edf2fb;
-            transform: translateY(-2px);
-        }
-        
-        .task-desc {
-            margin-bottom: 0;
-        }
-        
-        .task-meta {
-            font-size: 0.85rem;
-            color: #6c757d;
-        }
-        
-        .btn {
-            border-radius: 5px;
-            font-weight: 500;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover, .btn-primary:focus {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-        
-        .btn-success {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-        }
-        
-        .accordion {
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        
-        .accordion-item {
-            border: none;
-            margin-bottom: 5px;
-        }
-        
-        .accordion-button {
-            background-color: rgba(var(--bs-light-rgb), 1);
-            font-weight: 500;
-        }
-        
-        .accordion-button:not(.collapsed) {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        .accordion-content {
-            padding: 1.5rem 1.75rem;
-        }
-        
-        footer {
-            background-color: var(--dark-color);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-        
-        /* Progress indicator sizing fix */
-        .progress {
-            height: 20px; 
-            font-size: 0.75rem;
-            border-radius: 10px;
-        }
-        
-        .progress-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            overflow: visible;
-        }
-        
-        /* Task completed style */
-        .task-completed {
-            text-decoration: line-through;
-            color: #6c757d;
-        }
-        
-        /* Microanimations */
-        .card {
-            transition: transform 0.2s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        /* Notification for Firebase operations */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 1000;
-        }
-        
-        .notification.show {
-            opacity: 1;
-        }
-        
-        /* Loading indicator */
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.7);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .loading-spinner {
-            width: 3rem;
-            height: 3rem;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plano de Estudos de Emanuel Ferreira - Transição para TI & Crescimento Pessoal</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9fafb;
+    }
+    
+    .calendar-day {
+      width: 14.28%;
+      height: 100px;
+    }
+    
+    .calendar-day.active {
+      background-color: #e5edff;
+      border: 2px solid #4f46e5;
+    }
+    
+    .calendar-day.today {
+      background-color: #4f46e5;
+      color: white;
+    }
+    
+    .task-item {
+      border-left: 4px solid #4f46e5;
+    }
+    
+    .task-item.completed {
+      border-left: 4px solid #10b981;
+      background-color: #f0fdf4;
+    }
+    
+    .progress-circle {
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    
+    .streak-flame {
+      color: #f59e0b;
+      animation: flame 1.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes flame {
+      from { transform: scale(1); opacity: 0.8; }
+      to { transform: scale(1.1); opacity: 1; }
+    }
+    
+    .resource-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .level-indicator {
+      transition: width 0.5s ease-in-out;
+    }
+    
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Accordion */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    .accordion-content.active {
+      max-height: 500px;
+    }
+    
+    /* Print styles for PDF export */
+     {
+      .no-print {
+        display: none;
+      }
+      
+      body {
+        background-color: white;
+      }
+      
+      .page-container {
+        margin: 0;
+        padding: 10px;
+      }
+      
+      .shadow, .shadow-lg, .shadow-md {
+        box-shadow: none !important;
+      }
+    }
+
+    /* Custom checkbox styles */
+    .custom-checkbox {
+      position: relative;
+      padding-left: 35px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .custom-checkbox input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 25px;
+      width: 25px;
+      background-color: #eee;
+      border-radius: 4px;
+    }
+
+    .custom-checkbox:hover input ~ .checkmark {
+      background-color: #ccc;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark {
+      background-color: #4f46e5;
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .custom-checkbox .checkmark:after {
+      left: 9px;
+      top: 5px;
+      width: 7px;
+      height: 12px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+    }
+    
+    #progress-percent {
+      font-size: 12px;
+      dominant-baseline: middle;
+    }
+    
+    .social-share-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .social-share-btn:hover {
+      transform: translateY(-3px);
+    }
+  </style>
 </head>
 <body>
-    <!-- Loading indicator -->
-    <div id="loading" class="loading">
-        <div class="loading-spinner"></div>
-    </div>
-    
-    <!-- Notification -->
-    <div id="notification" class="notification"></div>
-    
-    <header class="header">
-        <div class="container-custom">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 fw-bold">Plano de Estudos de Emanuel Ferreira</h1>
-                    <p class="lead">Transição para TI & Crescimento Pessoal</p>
-                </div>
-                <div class="col-md-4 text-end">
-                    <button id="logoutBtn" class="btn btn-outline-light">Sair</button>
-                </div>
-            </div>
+  <div class="page-container max-w-6xl mx-auto px-4 pb-20">
+    <!-- Header -->
+    <header class="py-6 mb-6">
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-indigo-700 mb-2">Plano de Estudos de Emanuel Ferreira</h1>
+        <p class="text-xl text-gray-600">Transição para TI & Crescimento Pessoal</p>
+        <div class="mt-4 text-gray-600">
+          <p>Um guia personalizado para sua jornada começando em 21 de abril de 2025</p>
         </div>
-    </header>
-    
-    <main class="container-custom">
-        <div class="row">
-            <!-- Perfil e Objetivos -->
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-person-circle me-2"></i> Perfil Pessoal
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center mb-4">
-                            <img src="https://via.placeholder.com/150" class="rounded-circle" alt="Foto de perfil">
-                            <h4 class="mt-3">Emanuel Ferreira da Silva</h4>
-                            <p class="mb-1">23 anos • Nascido em 08/03/2002</p>
-                            <p class="text-muted">Comprador na Sabor Vitória Alimentação</p>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h5><i class="bi bi-briefcase me-2"></i> Situação Atual</h5>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Cargo atual
-                                    <span class="badge bg-primary rounded-pill">Comprador</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Salário atual
-                                    <span class="badge bg-primary rounded-pill">R$ 3.000,00</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Status pessoal
-                                    <span class="badge bg-info rounded-pill">Noivo</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Moradia
-                                    <span class="badge bg-info rounded-pill">Apto na planta</span>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h5><i class="bi bi-bullseye me-2"></i> Objetivos</h5>
-                            <ul class="list-group list-group-flush" id="listaObjetivos">
-                                <!-- Objetivos serão carregados do Firebase -->
-                            </ul>
-                            
-                            <form id="formNovoObjetivo" class="mt-3">
-                                <div class="input-group">
-                                    <input type="text" id="novoObjetivo" class="form-control" placeholder="Novo objetivo...">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="bi bi-plus-lg"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+      </div>
+      
+      <!-- Perfil e Objetivos -->
+      <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div class="flex flex-col md:flex-row items-start justify-between">
+          <div class="mb-4 md:mb-0">
+            <h2 class="text-2xl font-semibold text-gray-800">Perfil Pessoal</h2>
+            <ul class="mt-2 text-gray-600 space-y-1">
+              <li><i class="fas fa-user text-indigo-500 mr-2"></i> Emanuel Ferreira da Silva, 23 anos (08/03/2002)</li>
+              <li><i class="fas fa-briefcase text-indigo-500 mr-2"></i> Comprador na Sabor Vitória Alimentação</li>
+              <li><i class="fas fa-money-bill-wave text-indigo-500 mr-2"></i> Salário atual: R$3.000,00</li>
+              <li><i class="fas fa-heart text-pink-500 mr-2"></i> Noivo, com planos de casamento</li>
+              <li><i class="fas fa-home text-indigo-500 mr-2"></i> Comprando apartamento na planta (mudança em 2026)</li>
+            </ul>
+          </div>
+          
+          <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 w-full md:w-96">
+            <h3 class="font-semibold text-indigo-800 mb-2">Meus Objetivos</h3>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span>Transição de carreira para área de TI até 2026</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span>Desenvolvimento pessoal e profissional contínuo</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span>Praticar 30 minutos de exercícios físicos diários</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span>Aumentar renda para estabilidade financeira</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Progresso Geral -->
+      <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="mb-4 md:mb-0">
+            <h2 class="text-2xl font-semibold text-gray-800">Sua Jornada de Aprendizado</h2>
+            <p class="text-gray-600">Acompanhe seu progresso e mantenha o ritmo</p>
+            <div class="mt-4 text-sm">
+              <span id="current-date" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full"></span>
+              <span class="mx-2">•</span>
+              <span id="days-until-start" class="bg-green-100 text-green-800 px-3 py-1 rounded-full"></span>
+            </div>
+          </div>
+          
+          <div class="flex items-center space-x-8">
+            <div class="text-center">
+              <div class="relative inline-block w-20 h-20">
+                <svg class="w-full h-full" viewBox="0 0 36 36">
+                  <path class="stroke-current text-gray-200" stroke-width="3.8" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                  <path id="progress-circle" class="progress-circle stroke-current text-indigo-600" stroke-width="3.8" stroke-dasharray="100, 100" stroke-dashoffset="100" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                  <text x="18" y="20.35" class="text-sm font-semibold text-indigo-700" text-anchor="middle" id="progress-percent">0%</text>
+                </svg>
+              </div>
+              <p class="text-gray-700 font-medium mt-2">Progresso Total</p>
             </div>
             
-            <!-- Calendário e Tarefas -->
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="bi bi-calendar-week me-2"></i> Calendário de Estudos
-                        </div>
-                        <div>
-                            <button id="prevMonth" class="btn btn-sm btn-light me-2">
-                                <i class="bi bi-chevron-left"></i>
-                            </button>
-                            <button id="nextMonth" class="btn btn-sm btn-light">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 id="currentMonthYear" class="mb-3">Abril 2025</h5>
-                        
-                        <div class="calendar-header">
-                            <div>Dom</div>
-                            <div>Seg</div>
-                            <div>Ter</div>
-                            <div>Qua</div>
-                            <div>Qui</div>
-                            <div>Sex</div>
-                            <div>Sáb</div>
-                        </div>
-                        
-                        <div class="calendar-container" id="calendar">
-                            <!-- Calendário será renderizado via JavaScript -->
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-check2-square me-2"></i> Acompanhamento de Tarefas
-                    </div>
-                    <div class="card-body">
-                        <div class="progress mb-3">
-                            <div class="progress-bar" id="taskProgress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                        </div>
-                        
-                        <div id="taskList">
-                            <!-- Tarefas serão carregadas do Firebase -->
-                        </div>
-                        
-                        <form id="formNewTask" class="mt-4">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <input type="text" id="newTaskDesc" class="form-control" placeholder="Descrição da tarefa..." required>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="date" id="newTaskDate" class="form-control" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <select id="newTaskDuration" class="form-select" required>
-                                        <option value="15">15 minutos</option>
-                                        <option value="30" selected>30 minutos</option>
-                                        <option value="45">45 minutos</option>
-                                        <option value="60">60 minutos</option>
-                                        <option value="90">90 minutos</option>
-                                        <option value="120">120 minutos</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <button type="submit" class="btn btn-primary w-100">Adicionar</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <div class="text-center">
+              <div class="flex items-center justify-center w-20 h-20 rounded-full bg-amber-100 mx-auto">
+                <span id="current-streak" class="text-3xl font-bold text-amber-600">0</span>
+                <i class="streak-flame fas fa-fire ml-1 text-2xl"></i>
+              </div>
+              <p class="text-gray-700 font-medium mt-2">Dias Consecutivos</p>
             </div>
+            
+            <div class="text-center">
+              <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+                <span id="completed-tasks" class="text-3xl font-bold text-green-600">0</span>
+              </div>
+              <p class="text-gray-700 font-medium mt-2">Tarefas Concluídas</p>
+            </div>
+          </div>
         </div>
         
-        <!-- Cronograma Semanal -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-clock-history me-2"></i> Seu Cronograma Semanal
+        <!-- Compartilhe seu progresso -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h3 class="font-medium text-gray-700 mb-3">Compartilhe seu progresso:</h3>
+          <div class="flex space-x-3">
+            <a href="#" onclick="shareProgress('whatsapp')" class="social-share-btn bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+              <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+            </a>
+            <a href="#" onclick="shareProgress('twitter')" class="social-share-btn bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg">
+              <i class="fab fa-twitter mr-2"></i> Twitter
+            </a>
+            <a href="#" onclick="shareProgress('instagram')" class="social-share-btn bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg">
+              <i class="fab fa-instagram mr-2"></i> Instagram
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+      <!-- Calendário Interativo -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Calendário de Estudos</h2>
+          <p class="text-gray-600 mb-6">Acompanhe seus dias de estudo e mantenha a consistência</p>
+          
+          <div class="mb-4 flex justify-between items-center">
+            <button id="prev-month" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition">
+              <i class="fas fa-chevron-left mr-2"></i> Mês Anterior
+            </button>
+            <h3 id="current-month-display" class="text-xl font-medium text-gray-700">Abril 2025</h3>
+            <button id="next-month" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition">
+              Próximo Mês <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+          </div>
+          
+          <div class="grid grid-cols-7 gap-1 text-center font-medium text-gray-700 mb-2">
+            <div>Dom</div>
+            <div>Seg</div>
+            <div>Ter</div>
+            <div>Qua</div>
+            <div>Qui</div>
+            <div>Sex</div>
+            <div>Sáb</div>
+          </div>
+          
+          <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+            <!-- Calendar days will be generated by JavaScript -->
+          </div>
+          
+          <div class="mt-6 flex items-center justify-center space-x-6">
+            <div class="flex items-center">
+              <div class="w-4 h-4 bg-gray-200 rounded mr-2"></div>
+              <span class="text-sm text-gray-600">Não estudou</span>
             </div>
-            <div class="card-body">
-                <p>Planejamento otimizado para sua rotina de trabalho</p>
+            <div class="flex items-center">
+              <div class="w-4 h-4 bg-e5edff border-2 border-indigo-600 rounded mr-2"></div>
+              <span class="text-sm text-gray-600">Estudou</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-4 h-4 bg-indigo-600 rounded mr-2"></div>
+              <span class="text-sm text-gray-600">Hoje</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Cronograma Semanal -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Seu Cronograma Semanal</h2>
+          <p class="text-gray-600 mb-6">Planejamento otimizado para sua rotina de trabalho</p>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+              <thead>
+                <tr>
+                  <th class="py-3 px-4 bg-indigo-50 text-left text-indigo-700 font-semibold">Dia</th>
+                  <th class="py-3 px-4 bg-indigo-50 text-left text-indigo-700 font-semibold">Manhã</th>
+                  <th class="py-3 px-4 bg-indigo-50 text-left text-indigo-700 font-semibold">Trabalho</th>
+                  <th class="py-3 px-4 bg-indigo-50 text-left text-indigo-700 font-semibold">Noite</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-gray-200">
+                  <td class="py-4 px-4 font-medium">Segunda</td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-clock text-gray-400 mr-2"></i>
+                      <span>7:00 - Saída para trabalho</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-briefcase text-gray-400 mr-2"></i>
+                      <span>8:00 - 18:00</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="text-gray-700 mb-2">
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-utensils text-gray-400 mr-2"></i>
+                        <span>19:30 - 20:00 Jantar</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-laptop-code text-indigo-500 mr-2"></i>
+                        <span>20:00 - 20:45 Estudo principal</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-coffee text-amber-500 mr-2"></i>
+                        <span>20:45 - 21:00 Pausa</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-tasks text-green-500 mr-2"></i>
+                        <span>21:00 - 21:30 Revisão e prática</span>
+                      </div>
+                      <div class="flex items-center">
+                        <i class="fas fa-running text-red-500 mr-2"></i>
+                        <span>21:30 - 22:00 Exercícios físicos</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
                 
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 15%">Dia</th>
-                                <th style="width: 25%">Manhã</th>
-                                <th style="width: 25%">Trabalho</th>
-                                <th style="width: 35%">Noite</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Segunda</strong></td>
-                                <td>7:00 - Saída para trabalho</td>
-                                <td>8:00 - 18:00</td>
-                                <td>
-                                    19:30 - 20:00 Jantar<br>
-                                    20:00 - 20:45 Estudo principal<br>
-                                    20:45 - 21:00 Pausa<br>
-                                    21:00 - 21:30 Revisão e prática<br>
-                                    21:30 - 22:00 Exercícios físicos
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Terça</strong></td>
-                                <td>7:00 - Saída para trabalho</td>
-                                <td>8:00 - 18:00</td>
-                                <td>
-                                    19:30 - 20:00 Jantar<br>
-                                    20:00 - 20:45 Estudo principal<br>
-                                    20:45 - 21:00 Pausa<br>
-                                    21:00 - 21:30 Revisão e prática<br>
-                                    21:30 - 22:00 Exercícios físicos
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Quarta</strong></td>
-                                <td>7:00 - Saída para trabalho</td>
-                                <td>8:00 - 18:00</td>
-                                <td>
-                                    19:30 - 20:00 Jantar<br>
-                                    20:00 - 20:45 Estudo principal<br>
-                                    20:45 - 21:00 Pausa<br>
-                                    21:00 - 21:30 Revisão e prática<br>
-                                    21:30 - 22:00 Exercícios físicos
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Quinta</strong></td>
-                                <td>7:00 - Saída para trabalho</td>
-                                <td>8:00 - 18:00</td>
-                                <td>
-                                    19:30 - 20:00 Jantar<br>
-                                    20:00 - 20:45 Estudo principal<br>
-                                    20:45 - 21:00 Pausa<br>
-                                    21:00 - 21:30 Revisão e prática<br>
-                                    21:30 - 22:00 Exercícios físicos
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Sexta</strong></td>
-                                <td>7:00 - Saída para trabalho</td>
-                                <td>8:00 - 17:00</td>
-                                <td>
-                                    19:00 - 19:30 Descanso<br>
-                                    19:30 - 20:30 Planejamento semanal<br>
-                                    20:30 - 21:00 Exercícios físicos
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Sábado</strong></td>
-                                <td>9:00 - 9:30 Exercícios físicos</td>
-                                <td>10:00 - 12:00 Estudo principal</td>
-                                <td>19:00 - 20:00 Projeto prático (opcional)</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Domingo</strong></td>
-                                <td>9:00 - 9:30 Exercícios físicos</td>
-                                <td>10:00 - 11:30 Revisão semanal</td>
-                                <td>Preparação para a semana</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <tr class="border-b border-gray-200">
+                  <td class="py-4 px-4 font-medium">Terça</td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-clock text-gray-400 mr-2"></i>
+                      <span>7:00 - Saída para trabalho</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-briefcase text-gray-400 mr-2"></i>
+                      <span>8:00 - 18:00</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="text-gray-700 mb-2">
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-utensils text-gray-400 mr-2"></i>
+                        <span>19:30 - 20:00 Jantar</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-laptop-code text-indigo-500 mr-2"></i>
+                        <span>20:00 - 20:45 Estudo principal</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-coffee text-amber-500 mr-2"></i>
+                        <span>20:45 - 21:00 Pausa</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-tasks text-green-500 mr-2"></i>
+                        <span>21:00 - 21:30 Revisão e prática</span>
+                      </div>
+                      <div class="flex items-center">
+                        <i class="fas fa-dumbbell text-red-500 mr-2"></i>
+                        <span>21:30 - 22:00 Exercícios físicos</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="border-b border-gray-200">
+                  <td class="py-4 px-4 font-medium">Quarta</td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-clock text-gray-400 mr-2"></i>
+                      <span>7:00 - Saída para trabalho</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-briefcase text-gray-400 mr-2"></i>
+                      <span>8:00 - 18:00</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="text-gray-700 mb-2">
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-utensils text-gray-400 mr-2"></i>
+                        <span>19:30 - 20:00 Jantar</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-laptop-code text-indigo-500 mr-2"></i>
+                        <span>20:00 - 20:45 Estudo principal</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-coffee text-amber-500 mr-2"></i>
+                        <span>20:45 - 21:00 Pausa</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-tasks text-green-500 mr-2"></i>
+                        <span>21:00 - 21:30 Revisão e prática</span>
+                      </div>
+                      <div class="flex items-center">
+                        <i class="fas fa-running text-red-500 mr-2"></i>
+                        <span>21:30 - 22:00 Exercícios físicos</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="border-b border-gray-200">
+                  <td class="py-4 px-4 font-medium">Quinta</td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-clock text-gray-400 mr-2"></i>
+                      <span>7:00 - Saída para trabalho</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-briefcase text-gray-400 mr-2"></i>
+                      <span>8:00 - 18:00</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="text-gray-700 mb-2">
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-utensils text-gray-400 mr-2"></i>
+                        <span>19:30 - 20:00 Jantar</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-laptop-code text-indigo-500 mr-2"></i>
+                        <span>20:00 - 20:45 Estudo principal</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-coffee text-amber-500 mr-2"></i>
+                        <span>20:45 - 21:00 Pausa</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-tasks text-green-500 mr-2"></i>
+                        <span>21:00 - 21:30 Revisão e prática</span>
+                      </div>
+                      <div class="flex items-center">
+                        <i class="fas fa-dumbbell text-red-500 mr-2"></i>
+                        <span>21:30 - 22:00 Exercícios físicos</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="border-b border-gray-200">
+                  <td class="py-4 px-4 font-medium">Sexta</td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-clock text-gray-400 mr-2"></i>
+                      <span>7:00 - Saída para trabalho</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-briefcase text-gray-400 mr-2"></i>
+                      <span>8:00 - 17:00</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="text-gray-700 mb-2">
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-couch text-purple-500 mr-2"></i>
+                        <span>19:00 - 19:30 Descanso</span>
+                      </div>
+                      <div class="flex items-center mb-1">
+                        <i class="fas fa-calendar-check text-blue-500 mr-2"></i>
+                        <span>19:30 - 20:30 Planejamento semanal</span>
+                      </div>
+                      <div class="flex items-center">
+                        <i class="fas fa-running text-red-500 mr-2"></i>
+                        <span>20:30 - 21:00 Exercícios físicos</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="border-b border-gray-200">
+                  <td class="py-4 px-4 font-medium">Sábado</td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-running text-red-500 mr-2"></i>
+                      <span>9:00 - 9:30 Exercícios físicos</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-laptop-code text-indigo-500 mr-2"></i>
+                      <span>10:00 - 12:00 Estudo principal</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="text-gray-700 mb-2">
+                      <div class="flex items-center">
+                        <i class="fas fa-project-diagram text-teal-500 mr-2"></i>
+                        <span>19:00 - 20:00 Projeto prático (opcional)</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="border-b border-gray-200">
+                  <td class="py-4 px-4 font-medium">Domingo</td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-running text-red-500 mr-2"></i>
+                      <span>9:00 - 9:30 Exercícios físicos</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-gray-700">
+                    <div class="flex items-center">
+                      <i class="fas fa-sync text-green-500 mr-2"></i>
+                      <span>10:00 - 11:30 Revisão semanal</span>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="text-gray-700 mb-2">
+                      <div class="flex items-center">
+                        <i class="fas fa-battery-full text-yellow-500 mr-2"></i>
+                        <span>Preparação para a semana</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Sistema de Acompanhamento de Tarefas -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h2 class="text-2xl font-semibold text-gray-800">Acompanhamento de Tarefas</h2>
+              <p class="text-gray-600">Mantenha o controle das suas atividades de estudo</p>
             </div>
+            
+            <button id="add-task-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+              <i class="fas fa-plus mr-2"></i> Nova Tarefa
+            </button>
+          </div>
+          
+          <div class="mb-6">
+            <div class="flex space-x-2 mb-4">
+              <button id="filter-all" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">Todas</button>
+              <button id="filter-pending" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Pendentes</button>
+              <button id="filter-completed" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Concluídas</button>
+            </div>
+          </div>
+          
+          <div id="tasks-container" class="space-y-3">
+            <!-- Tasks will be added here by JavaScript -->
+            <div class="task-item p-4 rounded-lg bg-indigo-50">
+              <div class="flex items-start">
+                <label class="custom-checkbox">
+                  <input type="checkbox" class="task-checkbox" data-id="sample1">
+                  <span class="checkmark"></span>
+                </label>
+                <div class="ml-2 flex-grow">
+                  <h4 class="font-medium text-gray-800">Configurar ambiente de desenvolvimento</h4>
+                  <p class="text-gray-600 text-sm">Instalar editor de código e ferramentas necessárias</p>
+                  <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span class="mr-3"><i class="far fa-calendar-alt mr-1"></i> 21/04/2025</span>
+                    <span><i class="far fa-clock mr-1"></i> 45 minutos</span>
+                  </div>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="text-indigo-600 hover:text-indigo-800">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="task-item p-4 rounded-lg bg-indigo-50">
+              <div class="flex items-start">
+                <label class="custom-checkbox">
+                  <input type="checkbox" class="task-checkbox" data-id="sample2">
+                  <span class="checkmark"></span>
+                </label>
+                <div class="ml-2 flex-grow">
+                  <h4 class="font-medium text-gray-800">Completar primeiro módulo do curso de Python</h4>
+                  <p class="text-gray-600 text-sm">Introdução e fundamentos básicos</p>
+                  <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span class="mr-3"><i class="far fa-calendar-alt mr-1"></i> 22/04/2025</span>
+                    <span><i class="far fa-clock mr-1"></i> 30 minutos</span>
+                  </div>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="text-indigo-600 hover:text-indigo-800">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="task-item p-4 rounded-lg bg-amber-50">
+              <div class="flex items-start">
+                <label class="custom-checkbox">
+                  <input type="checkbox" class="task-checkbox" data-id="sample3">
+                  <span class="checkmark"></span>
+                </label>
+                <div class="ml-2 flex-grow">
+                  <h4 class="font-medium text-gray-800">Exercícios físicos - Treino em casa</h4>
+                  <p class="text-gray-600 text-sm">30 minutos de flexões, abdominais e alongamentos</p>
+                  <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <span class="mr-3"><i class="far fa-calendar-alt mr-1"></i> 21/04/2025</span>
+                    <span><i class="far fa-clock mr-1"></i> 30 minutos</span>
+                  </div>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="text-indigo-600 hover:text-indigo-800">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-800">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Rotina de Exercícios Físicos -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Rotina de Exercícios Físicos</h2>
+          <p class="text-gray-600 mb-6">30 minutos diários dedicados à sua saúde física</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-red-50 rounded-lg p-5 border border-red-100">
+              <h3 class="text-lg font-medium text-red-800 mb-3">Opções para Fazer em Casa</h3>
+              
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold">1</div>
+                  <div class="ml-3">
+                    <p class="font-medium text-gray-800">Circuito de Força</p>
+                    <p class="text-gray-700 text-sm">10 flexões, 15 abdominais, 10 agachamentos (3 séries)</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold">2</div>
+                  <div class="ml-3">
+                    <p class="font-medium text-gray-800">Treino HIIT</p>
+                    <p class="text-gray-700 text-sm">30 segundos de exercício intenso, 30 segundos de descanso (10 rounds)</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold">3</div>
+                  <div class="ml-3">
+                    <p class="font-medium text-gray-800">Alongamento Completo</p>
+                    <p class="text-gray-700 text-sm">15 minutos de alongamento profundo seguido de 15 minutos de exercícios de mobilidade</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-red-50 rounded-lg p-5 border border-red-100">
+              <h3 class="text-lg font-medium text-red-800 mb-3">Atividades ao Ar Livre</h3>
+              
+              <div class="space-y-4">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold">1</div>
+                  <div class="ml-3">
+                    <p class="font-medium text-gray-800">Corrida Leve</p>
+                    <p class="text-gray-700 text-sm">30 minutos de corrida em ritmo confortável</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold">2</div>
+                  <div class="ml-3">
+                    <p class="font-medium text-gray-800">Caminhada Rápida</p>
+                    <p class="text-gray-700 text-sm">30 minutos em ritmo acelerado</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold">3</div>
+                  <div class="ml-3">
+                    <p class="font-medium text-gray-800">Treino em Escada</p>
+                    <p class="text-gray-700 text-sm">Encontre uma escada e faça 10 séries de subida e descida</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 bg-white rounded-lg p-5 border border-gray-200">
+            <h3 class="text-lg font-medium text-gray-800 mb-3">Dicas para Manter Consistência</h3>
+            
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span class="text-gray-700">Escolha sempre o mesmo horário para criar o hábito</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span class="text-gray-700">Prepare sua roupa de treino com antecedência</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span class="text-gray-700">Faça um registro simples da sua evolução</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span class="text-gray-700">Nos dias de menos disposição, faça pelo menos 5 minutos</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Gamificação e Nível -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Sua Jornada de Programador</h2>
+          <p class="text-gray-600 mb-6">Acompanhe seu nível e desbloqueie conquistas</p>
+          
+          <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <span class="text-xl font-medium text-indigo-700">Nível 1: Aprendiz</span>
+                <p class="text-gray-600">120 XP para o próximo nível</p>
+              </div>
+              <div class="bg-gray-100 rounded-full p-2">
+                <span class="text-lg font-semibold text-indigo-700">30 XP</span>
+              </div>
+            </div>
+            
+            <div class="w-full bg-gray-200 rounded-full h-4">
+              <div id="level-progress" class="level-indicator bg-indigo-600 h-4 rounded-full" style="width: 20%"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div class="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-medium text-indigo-800">Sequência de Estudos</h4>
+                  <span class="bg-indigo-200 text-indigo-800 px-2 py-1 rounded-full text-xs">+5 XP</span>
+                </div>
+                <p class="text-gray-600 text-sm">Complete 3 dias consecutivos de estudo</p>
+                <div class="mt-3 w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-indigo-400 h-2 rounded-full" style="width: 33%"></div>
+                </div>
+                <p class="mt-1 text-xs text-right text-gray-500">1/3</p>
+              </div>
+              
+              <div class="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-medium text-indigo-800">Primeiro Código</h4>
+                  <span class="bg-indigo-200 text-indigo-800 px-2 py-1 rounded-full text-xs">+15 XP</span>
+                </div>
+                <p class="text-gray-600 text-sm">Escreva e execute seu primeiro programa</p>
+                <div class="mt-3 w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-indigo-400 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+                <p class="mt-1 text-xs text-right text-gray-500">0/1</p>
+              </div>
+              
+              <div class="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="font-medium text-indigo-800">Explorador</h4>
+                  <span class="bg-indigo-200 text-indigo-800 px-2 py-1 rounded-full text-xs">+10 XP</span>
+                </div>
+                <p class="text-gray-600 text-sm">Experimente 3 áreas diferentes da TI</p>
+                <div class="mt-3 w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-indigo-400 h-2 rounded-full" style="width: 33%"></div>
+                </div>
+                <p class="mt-1 text-xs text-right text-gray-500">1/3</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="border-t border-gray-200 pt-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Próximos Níveis</h3>
+            
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">2</div>
+                <div class="ml-4">
+                  <h4 class="font-medium text-gray-800">Iniciante</h4>
+                  <p class="text-gray-600 text-sm">Desbloqueie projetos simples e ferramentas básicas</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-bold">3</div>
+                <div class="ml-4">
+                  <h4 class="font-medium text-gray-400">Desenvolvedor Júnior</h4>
+                  <p class="text-gray-400 text-sm">Comece a construir aplicações completas</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-bold">4</div>
+                <div class="ml-4">
+                  <h4 class="font-medium text-gray-400">Desenvolvedor Pleno</h4>
+                  <p class="text-gray-400 text-sm">Domine conceitos avançados e frameworks populares</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Recursos de Aprendizado -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recursos de Aprendizado</h2>
+          <p class="text-gray-600 mb-6">Materiais selecionados para sua jornada em TI</p>
+          
+          <div class="mb-6">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Exploração Inicial (Semanas 1-2)</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="h-3 bg-blue-500"></div>
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-medium text-gray-800">Python para Iniciantes</h4>
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Curso</span>
+                  </div>
+                  <p class="text-gray-600 text-sm mb-4">Aprenda os fundamentos da programação com Python, uma linguagem amigável para iniciantes.</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500"><i class="far fa-clock mr-1"></i> 6-8 horas</span>
+                    <a href="https://www.coursera.org/learn/python" target="_blank" class="text-blue-600 hover:underline">Acessar</a>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="h-3 bg-green-500"></div>
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-medium text-gray-800">Roadmap de Desenvolvedor Web</h4>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Guia</span>
+                  </div>
+                  <p class="text-gray-600 text-sm mb-4">Um mapa completo para se tornar um desenvolvedor web, desde os conceitos básicos até avançados.</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500"><i class="fas fa-book mr-1"></i> Referência</span>
+                    <a href="https://roadmap.sh/frontend" target="_blank" class="text-green-600 hover:underline">Acessar</a>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="h-3 bg-purple-500"></div>
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-medium text-gray-800">Áreas da TI Explicadas</h4>
+                    <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Vídeo</span>
+                  </div>
+                  <p class="text-gray-600 text-sm mb-4">Entenda as diferentes áreas da tecnologia da informação e encontre seu caminho ideal.</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500"><i class="far fa-clock mr-1"></i> 45 minutos</span>
+                    <a href="https://www.youtube.com/watch?v=SIH7lJCblMA" target="_blank" class="text-purple-600 hover:underline">Acessar</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Aprofundamento (Semanas 3-4)</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="h-3 bg-red-500"></div>
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-medium text-gray-800">HTML & CSS Fundamentals</h4>
+                    <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Curso</span>
+                  </div>
+                  <p class="text-gray-600 text-sm mb-4">Aprenda a criar páginas web estilizadas e responsivas com HTML e CSS.</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500"><i class="far fa-clock mr-1"></i> 10 horas</span>
+                    <a href="https://www.freecodecamp.org/learn/responsive-web-design/" target="_blank" class="text-red-600 hover:underline">Acessar</a>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="h-3 bg-yellow-500"></div>
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-medium text-gray-800">JavaScript Essencial</h4>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Curso</span>
+                  </div>
+                  <p class="text-gray-600 text-sm mb-4">Domine a linguagem fundamental para desenvolvimento web interativo.</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500"><i class="far fa-clock mr-1"></i> 12 horas</span>
+                    <a href="https://www.javascript.com/learn" target="_blank" class="text-yellow-600 hover:underline">Acessar</a>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="h-3 bg-indigo-500"></div>
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-lg font-medium text-gray-800">Lógica de Programação</h4>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded">Livro</span>
+                  </div>
+                  <p class="text-gray-600 text-sm mb-4">Fundamentos essenciais de lógica para qualquer linguagem de programação.</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500"><i class="fas fa-book mr-1"></i> Referência</span>
+                    <a href="https://www.amazon.com.br/L%C3%B3gica-Programa%C3%A7%C3%A3o-Algoritmos-Javascript-iniciantes/dp/6586057906/" target="_blank" class="text-indigo-600 hover:underline">Acessar</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-medium text-gray-700 mb-4">Ferramentas & Comunidades</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="p-5">
+                  <div class="flex items-center mb-3">
+                    <i class="fab fa-github text-3xl text-gray-800 mr-3"></i>
+                    <div>
+                      <h4 class="text-lg font-medium text-gray-800">GitHub</h4>
+                      <p class="text-gray-600 text-sm">Plataforma essencial para colaboração e versionamento de código</p>
+                    </div>
+                  </div>
+                  <a href="https://github.com/" target="_blank" class="text-blue-600 hover:underline text-sm">Acessar GitHub</a>
+                </div>
+              </div>
+              
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="p-5">
+                  <div class="flex items-center mb-3">
+                    <i class="fab fa-stack-overflow text-3xl text-orange-500 mr-3"></i>
+                    <div>
+                      <h4 class="text-lg font-medium text-gray-800">Stack Overflow</h4>
+                      <p class="text-gray-600 text-sm">Comunidade de perguntas e respostas para programadores</p>
+                    </div>
+                  </div>
+                  <a href="https://stackoverflow.com/" target="_blank" class="text-blue-600 hover:underline text-sm">Acessar Stack Overflow</a>
+                </div>
+              </div>
+              
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="p-5">
+                  <div class="flex items-center mb-3">
+                    <i class="fas fa-laptop-code text-3xl text-teal-500 mr-3"></i>
+                    <div>
+                      <h4 class="text-lg font-medium text-gray-800">VS Code</h4>
+                      <p class="text-gray-600 text-sm">Editor de código gratuito, leve e poderoso da Microsoft</p>
+                    </div>
+                  </div>
+                  <a href="https://code.visualstudio.com/" target="_blank" class="text-blue-600 hover:underline text-sm">Baixar VS Code</a>
+                </div>
+              </div>
+              
+              <div class="resource-card bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden transition duration-300">
+                <div class="p-5">
+                  <div class="flex items-center mb-3">
+                    <i class="fab fa-discord text-3xl text-indigo-600 mr-3"></i>
+                    <div>
+                      <h4 class="text-lg font-medium text-gray-800">Discord Dev Community</h4>
+                      <p class="text-gray-600 text-sm">Comunidades de desenvolvedores para networking e ajuda</p>
+                    </div>
+                  </div>
+                  <a href="https://discord.gg/programming" target="_blank" class="text-blue-600 hover:underline text-sm">Acessar Discord</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Ferramentas para lidar com hiperfoco e desmotivação -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Ferramentas para Manter a Consistência</h2>
+          <p class="text-gray-600 mb-6">Estratégias para lidar com períodos de hiperfoco e desmotivação</p>
+          
+          <div class="mb-8">
+            <h3 class="text-xl font-medium text-indigo-700 mb-4">
+              <i class="fas fa-bolt mr-2"></i> Quando estiver com hiperfoco
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-indigo-50 rounded-lg p-5 border border-indigo-100">
+                <h4 class="text-lg font-medium text-indigo-800 mb-3">Crie um banco de projetos</h4>
+                <p class="text-gray-700 mb-4">Tenha sempre uma lista de ideias de projetos práticos para aproveitar momentos de alta energia e foco intenso.</p>
+                
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <h5 class="font-medium text-gray-800 mb-2">Exemplos de projetos rápidos:</h5>
+                  <ul class="space-y-2 text-gray-700">
+                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Calculadora simples com JavaScript</li>
+                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Site de portfólio pessoal com HTML/CSS</li>
+                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Aplicativo de lista de tarefas</li>
+                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Automatização de tarefas com Python</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="bg-indigo-50 rounded-lg p-5 border border-indigo-100">
+                <h4 class="text-lg font-medium text-indigo-800 mb-3">Técnica de janela de foco</h4>
+                <p class="text-gray-700 mb-4">Quando sentir o hiperfoco chegando, defina limites claros para evitar o esgotamento:</p>
+                
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold">1</div>
+                    <div class="ml-3">
+                      <p class="text-gray-700">Defina um período específico (ex: 90 minutos) com um timer</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold">2</div>
+                    <div class="ml-3">
+                      <p class="text-gray-700">Escolha um objetivo realista para esse período</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold">3</div>
+                    <div class="ml-3">
+                      <p class="text-gray-700">Faça uma pausa obrigatória quando o timer tocar</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold">4</div>
+                    <div class="ml-3">
+                      <p class="text-gray-700">Documente o que aprendeu antes de continuar</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-8">
+            <h3 class="text-xl font-medium text-amber-700 mb-4">
+              <i class="fas fa-battery-quarter mr-2"></i> Quando estiver desmotivado
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-amber-50 rounded-lg p-5 border border-amber-100">
+                <h4 class="text-lg font-medium text-amber-800 mb-3">Menu de micro-tarefas</h4>
+                <p class="text-gray-700 mb-4">Tenha uma lista de tarefas pequenas que podem ser concluídas em 5-15 minutos:</p>
+                
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <h5 class="font-medium text-gray-800 mb-2">Exemplos de micro-tarefas:</h5>
+                  <ul class="space-y-2">
+                    <li class="flex items-center">
+                      <span class="w-10 h-6 bg-green-100 text-green-800 text-xs font-medium rounded flex items-center justify-center mr-2">5 min</span>
+                      <span class="text-gray-700">Assistir um vídeo curto sobre conceito específico</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="w-10 h-6 bg-green-100 text-green-800 text-xs font-medium rounded flex items-center justify-center mr-2">10 min</span>
+                      <span class="text-gray-700">Resolver um exercício de programação simples</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="w-10 h-6 bg-yellow-100 text-yellow-800 text-xs font-medium rounded flex items-center justify-center mr-2">15 min</span>
+                      <span class="text-gray-700">Ler um artigo sobre tecnologia emergente</span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="w-10 h-6 bg-green-100 text-green-800 text-xs font-medium rounded flex items-center justify-center mr-2">5 min</span>
+                      <span class="text-gray-700">Organizar suas anotações de estudo</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="bg-amber-50 rounded-lg p-5 border border-amber-100">
+                <h4 class="text-lg font-medium text-amber-800 mb-3">Técnica dos 5 minutos</h4>
+                <p class="text-gray-700 mb-4">Quando a motivação estiver baixa, comprometa-se a estudar por apenas 5 minutos:</p>
+                
+                <div class="space-y-4">
+                  <div class="flex items-center">
+                    <i class="fas fa-check text-amber-600 mr-2"></i>
+                    <p class="text-gray-700">Comprometa-se a estudar por apenas 5 minutos, sem pressão</p>
+                  </div>
+                  
+                  <div class="flex items-center">
+                    <i class="fas fa-check text-amber-600 mr-2"></i>
+                    <p class="text-gray-700">Após 5 minutos, decida se quer continuar ou parar</p>
+                  </div>
+                  
+                  <div class="flex items-center">
+                    <i class="fas fa-check text-amber-600 mr-2"></i>
+                    <p class="text-gray-700">Se decidir parar, não se culpe - você cumpriu o combinado</p>
+                  </div>
+                  
+                  <div class="flex items-center">
+                    <i class="fas fa-lightbulb text-amber-600 mr-2"></i>
+                    <p class="text-gray-700">Na maioria das vezes, você provavelmente continuará estudando além dos 5 minutos</p>
+                  </div>
+                </div>
+                
+                <button id="start-timer-btn" class="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition flex items-center justify-center w-full">
+                  <i class="fas fa-play-circle mr-2"></i> Iniciar timer de 5 minutos
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-medium text-teal-700 mb-4">
+              <i class="fas fa-sync-alt mr-2"></i> Mantenha a consistência
+            </h3>
+            
+            <div class="bg-teal-50 rounded-lg p-5 border border-teal-100">
+              <h4 class="text-lg font-medium text-teal-800 mb-3">Técnica "Não Quebre a Corrente"</h4>
+              <p class="text-gray-700 mb-4">Desenvolva a consistência criando uma corrente de dias consecutivos de estudo:</p>
+              
+              <div class="flex flex-wrap gap-2 mb-6">
+                <div class="w-10 h-10 rounded-lg bg-teal-200 flex items-center justify-center text-teal-800 font-medium">15</div>
+                <div class="w-10 h-10 rounded-lg bg-teal-200 flex items-center justify-center text-teal-800 font-medium">16</div>
+                <div class="w-10 h-10 rounded-lg bg-teal-200 flex items-center justify-center text-teal-800 font-medium">17</div>
+                <div class="w-10 h-10 rounded-lg bg-teal-200 flex items-center justify-center text-teal-800 font-medium">18</div>
+                <div class="w-10 h-10 rounded-lg bg-teal-200 flex items-center justify-center text-teal-800 font-medium">19</div>
+                <div class="w-10 h-10 rounded-lg bg-teal-200 flex items-center justify-center text-teal-800 font-medium">20</div>
+                <div class="w-10 h-10 rounded-lg bg-teal-600 flex items-center justify-center text-white font-medium">21</div>
+                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 font-medium">22</div>
+                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 font-medium">23</div>
+                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 font-medium">24</div>
+                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 font-medium">25</div>
+                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 font-medium">26</div>
+                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 font-medium">27</div>
+                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 font-medium">28</div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <h5 class="font-medium text-gray-800 mb-2">Como implementar:</h5>
+                  <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-start">
+                      <i class="fas fa-check-circle text-teal-500 mt-1 mr-2"></i>
+                      <span>Marque no calendário cada dia que você estudar (mesmo que por apenas 15 minutos)</span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-check-circle text-teal-500 mt-1 mr-2"></i>
+                      <span>Desafie-se a não quebrar a sequência</span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-check-circle text-teal-500 mt-1 mr-2"></i>
+                      <span>A sequência visual se torna uma motivação por si só com o tempo</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <h5 class="font-medium text-gray-800 mb-2">Dicas para momentos difíceis:</h5>
+                  <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-start">
+                      <i class="fas fa-lightbulb text-amber-500 mt-1 mr-2"></i>
+                      <span>Tenha "tarefas de emergência" de apenas 5 minutos para dias difíceis</span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-lightbulb text-amber-500 mt-1 mr-2"></i>
+                      <span>Defina 2-3 dias por semana como "inegociáveis" para estudo</span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fas fa-lightbulb text-amber-500 mt-1 mr-2"></i>
+                      <span>Se quebrar a sequência, comece uma nova imediatamente, sem se culpar</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- FAQ Accordion -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Perguntas Frequentes</h2>
+          
+          <div class="space-y-4">
+            <div class="border border-gray-200 rounded-lg">
+              <button class="accordion-btn w-full text-left p-4 font-medium text-gray-800 focus:outline-none flex justify-between items-center">
+                <span>Como posso saber qual área de TI é a melhor para mim?</span>
+                <i class="fas fa-chevron-down text-indigo-600 transition-transform"></i>
+              </button>
+              <div class="accordion-content px-5 pb-5">
+                <p class="text-gray-700">
+                  A melhor maneira é experimentar diferentes áreas através de cursos introdutórios e pequenos projetos. Durante as primeiras semanas, reserve tempo para explorar desenvolvimento web, análise de dados, automação, entre outros. Considere também suas habilidades atuais - por exemplo, sua experiência com Automação Industrial pode facilitar sua transição para áreas como IoT ou automação de processos com Python.
+                </p>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg">
+              <button class="accordion-btn w-full text-left p-4 font-medium text-gray-800 focus:outline-none flex justify-between items-center">
+                <span>O que fazer quando perder a motivação?</span>
+                <i class="fas fa-chevron-down text-indigo-600 transition-transform"></i>
+              </button>
+              <div class="accordion-content px-5 pb-5">
+                <p class="text-gray-700">
+                  É normal ter flutuações na motivação. Quando isso acontecer, use a técnica dos 5 minutos - comprometa-se a estudar por apenas 5 minutos e depois decida se quer continuar. Também é útil conectar-se com comunidades de desenvolvedores para obter apoio e inspiração. Lembre-se que o progresso não é linear, e pequenos passos consistentes levam a grandes resultados ao longo do tempo.
+                </p>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg">
+              <button class="accordion-btn w-full text-left p-4 font-medium text-gray-800 focus:outline-none flex justify-between items-center">
+                <span>Quanto tempo levará para eu conseguir uma posição em TI?</span>
+                <i class="fas fa-chevron-down text-indigo-600 transition-transform"></i>
+              </button>
+              <div class="accordion-content px-5 pb-5">
+                <p class="text-gray-700">
+                  O tempo varia conforme a área específica, sua dedicação e conhecimento prévio. Para posições iniciais em desenvolvimento web, por exemplo, muitas pessoas conseguem preparo suficiente em 6-9 meses de estudo consistente. Sua experiência em Automação Industrial já é um diferencial, pois demonstra familiaridade com sistemas técnicos. Foque em construir um portfólio de projetos práticos, que é frequentemente mais valorizado que certificações teóricas.
+                </p>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg">
+              <button class="accordion-btn w-full text-left p-4 font-medium text-gray-800 focus:outline-none flex justify-between items-center">
+                <span>Como lidar com o hiperfoco sem me esgotar?</span>
+                <i class="fas fa-chevron-down text-indigo-600 transition-transform"></i>
+              </button>
+              <div class="accordion-content px-5 pb-5">
+                <p class="text-gray-700">
+                  O hiperfoco pode ser muito produtivo quando bem gerenciado. Estabeleça limites claros usando timers (técnica Pomodoro) e faça pausas obrigatórias. Também é importante documentar o que você aprendeu durante esses períodos de alta concentração, para que possa revisitar o conteúdo mais tarde. Aproveite o hiperfoco para tarefas complexas que exigem concentração profunda, mas evite sessões muito longas sem pausas.
+                </p>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg">
+              <button class="accordion-btn w-full text-left p-4 font-medium text-gray-800 focus:outline-none flex justify-between items-center">
+                <span>Preciso de um diploma em TI para conseguir um emprego na área?</span>
+                <i class="fas fa-chevron-down text-indigo-600 transition-transform"></i>
+              </button>
+              <div class="accordion-content px-5 pb-5">
+                <p class="text-gray-700">
+                  Não necessariamente. Embora um diploma possa abrir portas, muitas empresas de tecnologia valorizam mais habilidades práticas e experiência comprovada. Construir um portfólio sólido de projetos, contribuir para projetos open-source e obter certificações específicas podem ser tão valiosos quanto um diploma formal. O mercado de TI tem alta demanda por profissionais qualificados, com déficit projetado de 530 mil profissionais até 2025 no Brasil, o que cria oportunidades para pessoas em transição de carreira.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <!-- Modais -->
+    <div id="add-task-modal" class="modal">
+      <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-semibold text-gray-800">Adicionar Nova Tarefa</h3>
+          <button id="close-task-modal" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
         
-        <!-- Rotina de Exercícios Físicos -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-activity me-2"></i> Rotina de Exercícios Físicos
+        <form id="add-task-form">
+          <div class="mb-4">
+            <label for="task-title" class="block text-gray-700 font-medium mb-2">Título da Tarefa</label>
+            <input type="text" id="task-title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+          </div>
+          
+          <div class="mb-4">
+            <label for="task-description" class="block text-gray-700 font-medium mb-2">Descrição</label>
+            <textarea id="task-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="task-date" class="block text-gray-700 font-medium mb-2">Data</label>
+              <input type="date" id="task-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
             </div>
-            <div class="card-body">
-                <p>30 minutos diários dedicados à sua saúde física</p>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header bg-light text-dark">
-                                <i class="bi bi-house me-2"></i> Opções para Fazer em Casa
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <h6 class="fw-bold">1. Circuito de Força</h6>
-                                    <p>10 flexões, 15 abdominais, 10 agachamentos (3 séries)</p>
-                                </div>
-                                <div class="mb-3">
-                                    <h6 class="fw-bold">2. Treino HIIT</h6>
-                                    <p>30 segundos de exercício intenso, 30 segundos de descanso (10 rounds)</p>
-                                </div>
-                                <div>
-                                    <h6 class="fw-bold">3. Alongamento Completo</h6>
-                                    <p>15 minutos de alongamento profundo seguido de 15 minutos de exercícios de mobilidade</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header bg-light text-dark">
-                                <i class="bi bi-tree me-2"></i> Atividades ao Ar Livre
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <h6 class="fw-bold">1. Corrida Leve</h6>
-                                    <p>30 minutos de corrida em ritmo confortável</p>
-                                </div>
-                                <div class="mb-3">
-                                    <h6 class="fw-bold">2. Caminhada Rápida</h6>
-                                    <p>30 minutos em ritmo acelerado</p>
-                                </div>
-                                <div>
-                                    <h6 class="fw-bold">3. Treino em Escada</h6>
-                                    <p>Encontre uma escada e faça 10 séries de subida e descida</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card mt-2">
-                    <div class="card-header bg-light text-dark">
-                        <i class="bi bi-lightbulb me-2"></i> Dicas para Manter Consistência
-                    </div>
-                    <div class="card-body">
-                        <ul>
-                            <li>Escolha sempre o mesmo horário para criar o hábito</li>
-                            <li>Prepare sua roupa de treino com antecedência</li>
-                            <li>Faça um registro simples da sua evolução</li>
-                            <li>Nos dias de menos disposição, faça pelo menos 5 minutos</li>
-                        </ul>
-                    </div>
-                </div>
+            
+            <div>
+              <label for="task-time" class="block text-gray-700 font-medium mb-2">Tempo Estimado</label>
+              <select id="task-time" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="15">15 minutos</option>
+                <option value="30">30 minutos</option>
+                <option value="45">45 minutos</option>
+                <option value="60">1 hora</option>
+                <option value="90">1.5 horas</option>
+                <option value="120">2 horas</option>
+              </select>
             </div>
-        </div>
-
-        <!-- Ferramentas para Manter a Consistência -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-tools me-2"></i> Ferramentas para Manter a Consistência
-            </div>
-            <div class="card-body">
-                <p>Estratégias para lidar com períodos de hiperfoco e desmotivação</p>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header bg-light text-dark">
-                                <i class="bi bi-lightning-charge me-2"></i> Quando estiver com hiperfoco
-                            </div>
-                            <div class="card-body">
-                                <h6 class="fw-bold">Crie um banco de projetos</h6>
-                                <p>Tenha sempre uma lista de ideias de projetos práticos para aproveitar momentos de alta energia e foco intenso.</p>
-                                
-                                <h6 class="mt-3 fw-bold">Exemplos de projetos rápidos:</h6>
-                                <ul>
-                                    <li>Calculadora simples com JavaScript</li>
-                                    <li>Site de portfólio pessoal com HTML/CSS</li>
-                                    <li>Aplicativo de lista de tarefas</li>
-                                    <li>Automatização de tarefas com Python</li>
-                                </ul>
-                                
-                                <h6 class="mt-4 fw-bold">Técnica de janela de foco</h6>
-                                <p>Quando sentir o hiperfoco chegando, defina limites claros para evitar o esgotamento:</p>
-                                
-                                <ol>
-                                    <li>Defina um período específico (ex: 90 minutos) com um timer</li>
-                                    <li>Escolha um objetivo realista para esse período</li>
-                                    <li>Faça uma pausa obrigatória quando o timer tocar</li>
-                                    <li>Documente o que aprendeu antes de continuar</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header bg-light text-dark">
-                                <i class="bi bi-battery-half me-2"></i> Quando estiver desmotivado
-                            </div>
-                            <div class="card-body">
-                                <h6 class="fw-bold">Menu de micro-tarefas</h6>
-                                <p>Tenha uma lista de tarefas pequenas que podem ser concluídas em 5-15 minutos:</p>
-                                
-                                <h6 class="mt-3 fw-bold">Exemplos de micro-tarefas:</h6>
-                                <ul>
-                                    <li><strong>5 min</strong> Assistir um vídeo curto sobre conceito específico</li>
-                                    <li><strong>10 min</strong> Resolver um exercício de programação simples</li>
-                                    <li><strong>15 min</strong> Ler um artigo sobre tecnologia emergente</li>
-                                    <li><strong>5 min</strong> Organizar suas anotações de estudo</li>
-                                </ul>
-                                
-                                <h6 class="mt-4 fw-bold">Técnica dos 5 minutos</h6>
-                                <p>Quando a motivação estiver baixa, comprometa-se a estudar por apenas 5 minutos:</p>
-                                
-                                <ul>
-                                    <li>Comprometa-se a estudar por apenas 5 minutos, sem pressão</li>
-                                    <li>Após 5 minutos, decida se quer continuar ou parar</li>
-                                    <li>Se decidir parar, não se culpe - você cumpriu o combinado</li>
-                                    <li>Na maioria das vezes, você provavelmente continuará estudando além dos 5 minutos</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card mt-2">
-                    <div class="card-header bg-light text-dark">
-                        <i class="bi bi-calendar-check me-2"></i> Mantenha a consistência
-                    </div>
-                    <div class="card-body">
-                        <h6 class="fw-bold">Técnica "Não Quebre a Corrente"</h6>
-                        <p>Desenvolva a consistência criando uma corrente de dias consecutivos de estudo:</p>
-                        
-                        <div class="d-flex flex-wrap mb-3" id="chainTracking">
-                            <!-- Será preenchido via JavaScript -->
-                        </div>
-                        
-                        <h6 class="mt-3 fw-bold">Como implementar:</h6>
-                        <ul>
-                            <li>Marque no calendário cada dia que você estudar (mesmo que por apenas 15 minutos)</li>
-                            <li>Desafie-se a não quebrar a sequência</li>
-                            <li>A sequência visual se torna uma motivação por si só com o tempo</li>
-                        </ul>
-                        
-                        <h6 class="mt-4 fw-bold">Dicas para momentos difíceis:</h6>
-                        <ul>
-                            <li>Tenha "tarefas de emergência" de apenas 5 minutos para dias difíceis</li>
-                            <li>Defina 2-3 dias por semana como "inegociáveis" para estudo</li>
-                            <li>Se quebrar a sequência, comece uma nova imediatamente, sem se culpar</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+          </div>
+          
+          <div class="flex justify-end">
+            <button type="button" id="cancel-task-btn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg mr-2 hover:bg-gray-300 transition">Cancelar</button>
+            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">Adicionar Tarefa</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <div id="timer-modal" class="modal">
+      <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-semibold text-gray-800">Timer de 5 Minutos</h3>
+          <button id="close-timer-modal" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
         
-        <!-- Perguntas Frequentes -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-question-circle me-2"></i> Perguntas Frequentes
-            </div>
-            <div class="card-body">
-                <div class="accordion" id="faqAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqOne">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                Como escolher a melhor área
+        <div class="text-center py-8">
+          <div class="text-6xl font-bold text-indigo-700 mb-6" id="timer-display">05:00</div>
+          
+          <p class="text-gray-700 mb-6">Comprometa-se a estudar por apenas 5 minutos. Depois, você decide se continua ou não.</p>
+          
+          <div class="flex justify-center space-x-4">
+            <button id="pause-timer-btn" class="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition">
+              <i class="fas fa-pause mr-2"></i> Pausar
+            </button>
+            <button id="reset-timer-btn" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition">
+              <i class="fas fa-redo mr-2"></i> Reiniciar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="text-center py-6 text-gray-600">
+      <p>Plano de Estudos de Emanuel Ferreira - Transição para TI & Crescimento Pessoal</p>
+      <p class="mt-2 text-sm">Iniciando em 21 de abril de 2025</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Inicializar valores de progresso
+    let progress = 0;
+    let streak = 0;
+    let completedTasks = 0;
+    
+    // Dicionário para armazenar os dias de estudo
+    let studyDays = {};
+    
+    // Data atual do sistema
+    const systemDate = new Date();
+    
+    // Data de início para o calendário
+    let currentDate = new Date(2025, 3, 21); // 21 de abril de 2025 (0-indexed month)
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+    
+    // Atualizar data atual e calcular dias até início
+    function updateCurrentDate() {
+      const currDateElem = document.getElementById('current-date');
+      const daysUntilElem = document.getElementById('days-until-start');
+      
+      // Formatar data atual
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      currDateElem.textContent = systemDate.toLocaleDateString('pt-BR', options);
+      
+      // Calcular dias até início
+      const startDate = new Date(2025, 3, 21); // 21 de abril de 2025
+      const timeDiff = startDate.getTime() - systemDate.getTime();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      
+      if (daysDiff > 0) {
+        daysUntilElem.textContent = `Faltam ${daysDiff} dias para começar`;
+      } else if (daysDiff === 0) {
+        daysUntilElem.textContent = `Começa hoje!`;
+        daysUntilElem.classList.remove('bg-green-100', 'text-green-800');
+        daysUntilElem.classList.add('bg-red-100', 'text-red-800');
+      } else {
+        daysUntilElem.textContent = `Iniciado há ${Math.abs(daysDiff)} dias`;
+      }
+    }
+    
+    // Chamar atualização de data
+    updateCurrentDate();
+    
+    // Elemento de progresso circular
+    const progressCircle = document.getElementById('progress-circle');
+    const progressPercent = document.getElementById('progress-percent');
+    
+    // Atualizar o progresso
+    function updateProgress(value) {
+      progress = value;
+      const dashOffset = 100 - progress;
+      progressCircle.style.strokeDashoffset = dashOffset;
+      progressPercent.textContent = `${progress}%`;
+    }
+    
+    // Inicializar progresso com 0%
+    updateProgress(0);
+    
+    // Atualizar streak e tarefas concluídas
+    document.getElementById('current-streak').textContent = streak;
+    document.getElementById('completed-tasks').textContent = completedTasks;
+    
+    // Função para gerar o calendário
+    function generateCalendar(month, year) {
+      const calendarGrid = document.getElementById('calendar-grid');
+      calendarGrid.innerHTML = '';
+      
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const daysInMonth = lastDay.getDate();
+      const startDay = firstDay.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+      
+      // Atualizar o título do mês
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      document.getElementById('current-month-display').textContent = `${monthNames[month]} ${year}`;
+      
+      // Adicionar dias vazios para o início do mês
+      for (let i = 0; i < startDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'calendar-day p-2 bg-gray-100';
+        calendarGrid.appendChild(emptyDay);
+      }
+      
+      // Adicionar dias do mês
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('div');
+        const currentDateString = `${year}-${month+1}-${day}`;
+        
+        dayCell.className = 'calendar-day p-2 border border-gray-200 flex flex-col';
+        
+        // Verificar se é um dia de estudo
+        if (studyDays[currentDateString]) {
+          dayCell.classList.add('active');
+        }
+        
+        // Verificar se é hoje (usando a data do sistema)
+        const isToday = systemDate.getDate() === day && 
+                        systemDate.getMonth() === month && 
+                        systemDate.getFullYear() === year;
+        
+        if (isToday) {
+          dayCell.classList.add('today');
+        }
+        
+        // Adicionar número do dia
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'text-right font-medium';
+        dayNumber.textContent = day;
+        dayCell.appendChild(dayNumber);
+        
+        // Adicionar evento de clique para marcar dias de estudo
+        dayCell.addEventListener('click', () => {
+          if (dayCell.classList.contains('active')) {
+            dayCell.classList.remove('active');
+            delete studyDays[currentDateString];
+          } else {
+            dayCell.classList.add('active');
+            studyDays[currentDateString] = true;
+          }
+          
+          // Atualizar streak
+          calculateStreak();
+        });
+        
+        calendarGrid.appendChild(dayCell);
+      }
+    }
+    
+    // Função para calcular streak (simplificada)
+    function calculateStreak() {
+      // Na versão completa, isso verificaria dias consecutivos
+      // Para simplificar, vamos apenas contar o número de dias marcados
+      streak = Object.keys(studyDays).length;
+      document.getElementById('current-streak').textContent = streak;
+    }
+    
+    // Inicializar o calendário
+    generateCalendar(currentMonth, currentYear);
+    
+    // Eventos para navegação do calendário
+    document.getElementById('prev-month').addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      generateCalendar(currentMonth, currentYear);
+    });
+    
+    document.getElementById('next-month').addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      generateCalendar(currentMonth, currentYear);
+    });
+    
+    // Funções para o sistema de tarefas
+    let tasks = [
+      {
+        id: 'sample1',
+        title: 'Configurar ambiente de desenvolvimento',
+        description: 'Instalar editor de código e ferramentas necessárias',
+        date: '2025-04-21',
+        time: '45',
+        completed: false
+      },
+      {
+        id: 'sample2',
+        title: 'Completar primeiro módulo do curso de Python',
+        description: 'Introdução e fundamentos básicos',
+        date: '2025-04-22',
+        time: '30',
+        completed: false
+      },
+      {
+        id: 'sample3',
+        title: 'Exercícios físicos - Treino em casa',
+        description: '30 minutos de flexões, abdominais e alongamentos',
+        date: '2025-04-21',
+        time: '30',
+        completed: false
+      }
+    ];
+    
+    // Função para atualizar o contador de tarefas concluídas
+    function updateCompletedTasks() {
+      completedTasks = tasks.filter(task => task.completed).length;
+      document.getElementById('completed-tasks').textContent = completedTasks;
+      
+      // Atualizar o progresso baseado nas tarefas concluídas
+      const totalTasks = tasks.length;
+      const progressValue = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      updateProgress(progressValue);
+    }
+    
+    // Eventos para os checkboxes de tarefas
+    document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', (e) => {
+        const taskId = e.target.dataset.id;
+        const taskItem = e.target.closest('.task-item');
+        
+        // Encontrar a tarefa no array
+        const taskIndex = tasks.findIndex(task => task.id === taskId);
+        if (taskIndex !== -1) {
+          tasks[taskIndex].completed = e.target.checked;
+          
+          if (e.target.checked) {
+            taskItem.classList.add('completed');
+          } else {
+            taskItem.classList.remove('completed');
+          }
+          
+          updateCompletedTasks();
+        }
+      });
+    });
+    
+    // Eventos para filtros de tarefas
+    document.getElementById('filter-all').addEventListener('click', () => {
+      filterTasks('all');
+    });
+    
+    document.getElementById('filter-pending').addEventListener('click', () => {
+      filterTasks('pending');
+    });
+    
+    document.getElementById('filter-completed').addEventListener('click', () => {
+      filterTasks('completed');
+    });
+    
+    function filterTasks(filter) {
+      // Atualizar estilos dos botões
+      document.getElementById('filter-all').className = 'bg-gray-200 text-gray-700 px-4 py-2 rounded-lg';
+      document.getElementById('filter-pending').className = 'bg-gray-200 text-gray-700 px-4 py-2 rounded-lg';
+      document.getElementById('filter-completed').className = 'bg-gray-200 text-gray-700 px-4 py-2 rounded-lg';
+      
+      if (filter === 'all') {
+        document.getElementById('filter-all').className = 'bg-indigo-600 text-white px-4 py-2 rounded-lg';
+      } else if (filter === 'pending') {
+        document.getElementById('filter-pending').className = 'bg-indigo-600 text-white px-4 py-2 rounded-lg';
+      } else {
+        document.getElementById('filter-completed').className = 'bg-indigo-600 text-white px-4 py-2 rounded-lg';
+      }
+      
+      // Em uma implementação completa, filtraria as tarefas visíveis
+    }
+    
+    // Modal de adicionar tarefa
+    const addTaskModal = document.getElementById('add-task-modal');
+    const addTaskBtn = document.getElementById('add-task-btn');
+    const closeTaskModalBtn = document.getElementById('close-task-modal');
+    const cancelTaskBtn = document.getElementById('cancel-task-btn');
+    const addTaskForm = document.getElementById('add-task-form');
+    
+    addTaskBtn.addEventListener('click', () => {
+      addTaskModal.style.display = 'block';
+    });
+    
+    closeTaskModalBtn.addEventListener('click', () => {
+      addTaskModal.style.display = 'none';
+    });
+    
+    cancelTaskBtn.addEventListener('click', () => {
+      addTaskModal.style.display = 'none';
+    });
+    
+    addTaskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Em uma implementação completa, adicionaria uma nova tarefa
+      addTaskModal.style.display = 'none';
+    });
+    
+    // Modal do timer
+    const timerModal = document.getElementById('timer-modal');
+    const startTimerBtn = document.getElementById('start-timer-btn');
+    const closeTimerModalBtn = document.getElementById('close-timer-modal');
+    const pauseTimerBtn = document.getElementById('pause-timer-btn');
+    const resetTimerBtn = document.getElementById('reset-timer-btn');
+    const timerDisplay = document.getElementById('timer-display');
+    
+    let timerInterval;
+    let timerSeconds = 300; // 5 minutos
+    let timerRunning = false;
+    
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timerSeconds / 60);
+      const seconds = timerSeconds % 60;
+      timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    function startTimer() {
+      if (!timerRunning) {
+        timerRunning = true;
+        timerInterval = setInterval(() => {
+          timerSeconds--;
+          updateTimerDisplay();
+          
+          if (timerSeconds <= 0) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            alert('Tempo finalizado! Deseja continuar estudando?');
+          }
+        }, 1000);
+      }
+    }
+    
+    startTimerBtn.addEventListener('click', () => {
+      timerModal.style.display = 'block';
+      resetTimer();
+      startTimer();
+    });
+    
+    closeTimerModalBtn.addEventListener('click', () => {
+      timerModal.style.display = 'none';
+      clearInterval(timerInterval);
+      timerRunning = false;
+    });
+    
+    pauseTimerBtn.addEventListener('click', () => {
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        pauseTimerBtn.innerHTML = '<i class="fas fa-play mr-2"></i> Continuar';
+      } else {
+        startTimer();
+        pauseTimerBtn.innerHTML = '<i class="fas fa-pause mr-2"></i> Pausar';
+      }
+    });
+    
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerSeconds = 300;
+      updateTimerDisplay();
+      pauseTimerBtn.innerHTML = '<i class="fas fa-pause mr-2"></i> Pausar';
+    }
+    
+    resetTimerBtn.addEventListener('click', resetTimer);
+    
+    // Accordion para FAQ
+    const accordionBtns = document.querySelectorAll('.accordion-btn');
+    
+    accordionBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const content = this.nextElementSibling;
+        const icon = this.querySelector('i');
+        
+        content.classList.toggle('active');
+        
+        if (content.classList.contains('active')) {
+          icon.style.transform = 'rotate(180deg)';
+        } else {
+          icon.style.transform = 'rotate(0)';
+        }
+        
+        // Fechar outros accordions
+        accordionBtns.forEach(otherBtn => {
+          if (otherBtn !== this) {
+            const otherContent = otherBtn.nextElementSibling;
+            const otherIcon = otherBtn.querySelector('i');
+            
+            otherContent.classList.remove('active');
+            otherIcon.style.transform = 'rotate(0)';
+          }
+        });
+      });
+    });
+    
+    // Fechar modais quando clicar fora deles
+    window.addEventListener('click', (e) => {
+      if (e.target === addTaskModal) {
+        addTaskModal.style.display = 'none';
+      }
+      
+      if (e.target === timerModal) {
+        timerModal.style.display = 'none';
+        clearInterval(timerInterval);
+        timerRunning = false;
+      }
+    });
+    
+    // Função para compartilhar progresso
+    function shareProgress(platform) {
+      const message = `🚀 Estou em transição para a área de TI! Já completei ${progress}% do meu plano de estudos e estou há ${streak} dias consecutivos estudando. #TransicaoCarreira #TI #DesenvolvimentoPessoal`;
+      
+      let shareUrl = '';
+      
+      switch(platform) {
+        case 'whatsapp':
+          shareUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+          break;
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+          break;
+        case 'instagram':
+          // Como o Instagram não tem API direta para compartilhamento,
+          // copiamos o texto para a área de transferência
+          navigator.clipboard.writeText(message)
+            .then(() => {
+              alert('Texto copiado para área de transferência. Você pode colá-lo no Instagram.');
+            })
+            .catch(err => {
+              console.error('Erro ao copiar texto: ', err);
+              alert('Não foi possível copiar o texto. Por favor, copie manualmente.');
+            });
+          return;
+      }
+      
+      if (shareUrl) {
+        window.open(shareUrl, '_blank');
+      }
+    }
+  </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDs57uW3TvumpBLhWH7HdDHUn1ZD6WcV7Z9OFtFvGzyt%2B5%2B8KTj0tFFBOQ8qekDEezGzk3dN8IakHPGqUF9UfxqbfWPj6FaSqXVfBZ6AwmCDXu7FMIoWBonYUrbBSMiz2ZvpxHpKmPUxl3hTmhxETl%2B0bLtUfXi3CxtAQayB0UoPqiPWY88h79S4kDJKjkBtt81g71N%2F9wI5f%2Fkbi0DcX%2Bve5z6oxEj9v%2BugAwTsNyX1PNOu0DiVCMPECWqj9e3fF01SMm56QSr5T1fUTc%2FLOCleEKJUkoiThjIexvSj4mJL6KgnbyEsQDH98mjM9%2Fw4EGejedH56uUT3pWfpMsnrgtlL5%2BhngU8JW4MpvVRBqOilgh7XnHj4DAOtdjGt%2FEkirGS13MULYH6PMnT6gpEK6QmLRBhrXduDl%2F0zhCj%2Fx%2FX%2Baj%2BkZQJHR6kU7WzxiGKd0H%2BrEDhWVf7h41%2BUiOOQJpVpyVS08wHRr0maWlrMekXG2KqQhBDMVTeZiaPEO8XdAmr%2BWyMj%2BGRI%2Bc1L8M8Su4Q%3D";
+        window.__genspark_locale = "pt-BR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDs57uW3TvumpBLhWH7HdDHUn1ZD6WcV7Z9OFtFvGzyt+5+8KTj0tFFBOQ8qekDEezGzk3dN8IakHPGqUF9UfxqbfWPj6FaSqXVfBZ6AwmCDXu7FMIoWBonYUrbBSMiz2ZvpxHpKmPUxl3hTmhxETl+0bLtUfXi3CxtAQayB0UoPqiPWY88h79S4kDJKjkBtt81g71N/9wI5f/kbi0DcX+ve5z6oxEj9v+ugAwTsNyX1PNOu0DiVCMPECWqj9e3fF01SMm56QSr5T1fUTc/LOCleEKJUkoiThjIexvSj4mJL6KgnbyEsQDH98mjM9/w4EGejedH56uUT3pWfpMsnrgtlL5+hngU8JW4MpvVRBqOilgh7XnHj4DAOtdjGt/EkirGS13MULYH6PMnT6gpEK6QmLRBhrXduDl/0zhCj/x/X+aj+kZQJHR6kU7WzxiGKd0H+rEDhWVf7h41+UiOOQJpVpyVS08wHRr0maWlrMekXG2KqQhBDMVTeZiaPEO8XdAmr+WyMj+GRI+c1L8M8Su4Q=";
+    </script>
+    
