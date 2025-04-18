@@ -1852,6 +1852,63 @@
       }
     }
   </script>
+<!-- Firebase App (a base) -->
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js"></script>
+<!-- Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js"></script>
+<!-- Firebase Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // Sua configuração do Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBlDAZAN0koJrEiB_6JU8ZvrAu_Lq0vHN0",
+    authDomain: "plano-estudos-ti.firebaseapp.com",
+    projectId: "plano-estudos-ti",
+    storageBucket: "plano-estudos-ti.firebasestorage.app",
+    messagingSenderId: "1095719399551",
+    appId: "1:1095719399551:web:876d345546d35f997c4f4a",
+    measurementId: "G-PPPN1PJ9PN"
+  };
+
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // Referências para serviços do Firebase
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  
+  // Verificar autenticação
+  auth.onAuthStateChanged(function(user) {
+    if (!user && window.location.pathname !== '/login.html') {
+      // Usuário não está logado, redirecionar para página de login
+      window.location.href = 'login.html';
+    } else if (user) {
+      // Usuário está logado, carregar dados
+      console.log("Usuário logado:", user.email);
+      loadUserData();
+    }
+  });
+  
+  // Função para carregar dados do usuário
+  function loadUserData() {
+    const userId = auth.currentUser.uid;
+    
+    // Exemplo: Carregar tarefas do Firestore
+    db.collection('users').doc(userId).collection('tasks')
+      .get()
+      .then((snapshot) => {
+        console.log("Tarefas carregadas:", snapshot.size);
+        // Aqui você adicionaria código para mostrar as tarefas na interface
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar tarefas:", error);
+      });
+  }
+  
+  // Adicione funções para manipular tarefas, calendário, etc.
+</script>
+
 </body>
 </html>
     <script id="html_badge_script1">
